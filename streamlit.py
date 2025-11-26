@@ -53,40 +53,28 @@ n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, m
 
 # Tombol untuk memulai prediksi
 if st.button('Prediksi'):
-    # Inisialisasi list untuk menampilkan grafik dengan sliding window
-    plot_dates = []
-    plot_values = []
+    # Mengambil 30 hari terakhir dari data yang ada
+    last_30_days = data[-30:]
 
-    # Prediksi stok untuk n_days dengan menggunakan sliding window
-    for i in range(len(data) - 30):
-        # Ambil 30 hari terakhir sebagai jendela data
-        last_30_days = data.iloc[i:i+30]
-
-        # Prediksi stok untuk n_days setelah 30 hari terakhir
-        predictions_rescaled = predict_stok(n_days, model, last_30_days)
-
-        # Tanggal untuk prediksi
-        predicted_dates = pd.date_range(start=last_30_days['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
-
-        # Tambahkan hasil prediksi ke grafik
-        plot_dates.extend(predicted_dates)
-        plot_values.extend(predictions_rescaled.flatten())
+    # Prediksi stok untuk n_days setelah 30 hari terakhir
+    predictions_rescaled = predict_stok(n_days, model, data)
 
     # Tampilkan hasil prediksi
     st.subheader(f'Prediksi untuk {n_days} Hari Ke Depan:')
+    predicted_dates = pd.date_range(start=last_30_days['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
     predicted_df = pd.DataFrame({
-        'Tanggal': plot_dates,
-        'Prediksi Stok Terpakai': plot_values
+        'Tanggal': predicted_dates,
+        'Prediksi Stok Terpakai': predictions_rescaled.flatten()
     })
     st.write(predicted_df)
 
     # Plot hasil prediksi
     plt.figure(figsize=(10, 6))
+    
+    # Plot 30 hari terakhir (data aktual)
+    plt.plot(last_30_days['tanggal'], last_30_days['stok_terpakai'], label='Actual Demand (30 Hari Terakhir)', color='blue', marker='o')
 
-    # Plot data aktual
-    plt.plot(data['tanggal'], data['stok_terpakai'], label='Actual Demand', color='blue', marker='o')
-
-    # Plot prediksi
+    # Plot prediksi untuk periode berikutnya
     plt.plot(predicted_df['Tanggal'], predicted_df['Prediksi Stok Terpakai'], label='Prediksi Stok Terpakai', color='orange', marker='x')
 
     # Menambahkan label dan judul
