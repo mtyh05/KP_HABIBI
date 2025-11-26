@@ -8,9 +8,10 @@ import matplotlib.pyplot as plt
 # Muat model yang sudah dilatih dengan penanganan error
 try:
     model = load_model('stok_terpakai_model.h5')  # Pastikan model yang sudah dilatih berada di path yang benar
+    st.success("Model berhasil dimuat!")
 except Exception as e:
     st.error(f"Model tidak dapat dimuat: {e}")
-    st.stop()
+    st.stop()  # Menghentikan eksekusi jika model gagal dimuat
 
 # Fungsi untuk memprediksi stok terpakai untuk n hari ke depan
 def predict_stok(n_days, model, data, seq_length=7):
