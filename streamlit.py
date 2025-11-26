@@ -1,0 +1,64 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+
+# Muat model yang sudah dilatih
+model = load_model('stok_terpakai_model.h5')
+
+def predict_stok(n_days, model, data, seq_length=7):
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    data_scaled = scaler.fit_transform(data[['stok_terpakai']])
+
+    # Ambil sequence terakhir untuk prediksi
+    last_sequence = data_scaled[-seq_length:].reshape(1, seq_length, 1)
+
+    predictions = []
+    for i in range(n_days):
+        next_day_pred = model.predict(last_sequence)
+        predictions.append(next_day_pred[0, 0])
+        last_sequence = np.roll(last_sequence, -1, axis=1)
+        last_sequence[0, -1, 0] = next_day_pred[0, 0]
+
+    # Transformasi kembali prediksi ke skala asli
+    predictions_rescaled = scaler.inverse_transform(np.array(predictions).reshape(-1, 1))
+    return predictions_rescaled
+
+# Membuat antarmuka pengguna
+st.title('Peramalan Stok Terpakai')
+st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok dalam periode tertentu.')
+
+# Input untuk jumlah hari yang ingin diprediksi
+n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, max_value=30, value=7)
+
+# Tombol untuk memulai prediksi
+if st.button('Prediksi'):
+    # Muat data yang relevan untuk prediksi (misalnya, ambil data terbaru)
+    file_path = st.file_uploader("Unggah Data Stok (format Excel)", type=['xlsx'])
+    if file_path is not None:
+        df = pd.read_excel(file_path)
+        df['tanggal'] = pd.to_datetime(df['tanggal'])
+        data = df[['tanggal', 'stok_terpakai']].sort_values('tanggal')
+
+        # Prediksi stok untuk n_days
+        predictions_rescaled = predict_stok(n_days, model, data)
+
+        # Tampilkan hasil prediksi
+        st.subheader(f'Prediksi untuk {n_days} Hari Ke Depan:')
+        predicted_dates = pd.date_range(start=data['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
+        predicted_df = pd.DataFrame({
+            'Tanggal': predicted_dates,
+            'Prediksi Stok Terpakai': predictions_rescaled.flatten()
+        })
+        st.write(predicted_df)
+
+        # Plot hasil prediksi
+        plt.figure(figsize=(10, 6))
+        plt.plot(predicted_df['Tanggal'], predicted_df['Prediksi Stok Terpakai'], label='Prediksi Stok Terpakai', color='orange')
+        plt.xlabel('Tanggal')
+        plt.ylabel('Stok Terpakai')
+        plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
+        plt.legend()
+        st.pyplot()
