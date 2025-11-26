@@ -5,8 +5,12 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 
-# Muat model yang sudah dilatih
-model = load_model('stok_terpakai_model.h5')  # Pastikan model yang sudah dilatih berada di path yang benar
+# Muat model yang sudah dilatih dengan penanganan error
+try:
+    model = load_model('stok_terpakai_model.h5')  # Pastikan model yang sudah dilatih berada di path yang benar
+except Exception as e:
+    st.error(f"Model tidak dapat dimuat: {e}")
+    st.stop()
 
 # Fungsi untuk memprediksi stok terpakai untuk n hari ke depan
 def predict_stok(n_days, model, data, seq_length=7):
@@ -32,8 +36,15 @@ def predict_stok(n_days, model, data, seq_length=7):
 st.title('Peramalan Stok Terpakai')
 st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok dalam periode tertentu berdasarkan data yang sudah ada.')
 
-df = pd.read_csv(path/to/dataset_kp.csv)
-df['tanggal'] = pd.to_datetime(df['tanggal'])
+# Membaca file CSV
+try:
+    df = pd.read_csv('dataset_kp.csv')  # Ganti dengan path file yang benar jika perlu
+    df['tanggal'] = pd.to_datetime(df['tanggal'])
+except Exception as e:
+    st.error(f"File CSV tidak dapat dibaca: {e}")
+    st.stop()
+
+# Memilih data yang relevan dan mengurutkan berdasarkan tanggal
 data = df[['tanggal', 'stok_terpakai']].sort_values('tanggal')
 
 # Input untuk jumlah hari yang ingin diprediksi
@@ -61,5 +72,3 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
-
-
