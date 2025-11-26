@@ -48,7 +48,7 @@ except Exception as e:
 data = df[['tanggal', 'stok_terpakai']].sort_values('tanggal')
 
 # Input untuk jumlah hari yang ingin diprediksi
-n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, max_value=30, value=1)
+n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, max_value=30, value=7)
 
 # Tombol untuk memulai prediksi
 if st.button('Prediksi'):
@@ -72,7 +72,3 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
-
-
-
-
