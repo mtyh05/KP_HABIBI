@@ -32,9 +32,10 @@ def predict_stok(n_days, model, data, seq_length=7):
 st.title('Peramalan Stok Terpakai')
 st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok dalam periode tertentu berdasarkan data yang sudah ada.')
 
-df = pd.read_csv("dataset_kp.csv")
-df['tanggal'] = pd.to_datetime(df['tanggal'])
-data = df[['tanggal', 'stok_terpakai']].sort_values('tanggal')
+# Memuat dataset CSV
+df = pd.read_csv("dataset_kp.csv")  # Ganti dengan lokasi file dataset Anda
+df['tanggal'] = pd.to_datetime(df['tanggal'])  # Pastikan format tanggal sesuai
+data = df[['tanggal', 'stok_terpakai']].sort_values('tanggal')  # Ambil hanya kolom yang diperlukan
 
 # Input untuk jumlah hari yang ingin diprediksi
 n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, max_value=30, value=7)
@@ -61,5 +62,3 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
-
-
