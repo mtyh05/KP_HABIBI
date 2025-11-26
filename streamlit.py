@@ -13,7 +13,7 @@ except Exception as e:
     st.stop()
 
 # Fungsi untuk memprediksi stok terpakai untuk n hari ke depan
-def predict_stok(n_days, model, data, seq_length=30):
+def predict_stok(n_days, model, data, seq_length=7):
     # Menormalisasi data
     scaler = MinMaxScaler(feature_range=(0, 1))
     data_scaled = scaler.fit_transform(data[['stok_terpakai']])
@@ -72,5 +72,6 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
+
 
 
