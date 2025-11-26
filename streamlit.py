@@ -33,7 +33,7 @@ st.title('Peramalan Stok Terpakai')
 st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok dalam periode tertentu berdasarkan data yang sudah ada.')
 
 # Memuat data yang sudah tersedia
-file_path = 'data_kp_habibi.xlsx'  # Path ke file data yang sudah ada (ganti dengan path yang sesuai)
+file_path = 'dataset_kp.xlsx'  # Path ke file data yang sudah ada (ganti dengan path yang sesuai)
 
 df = pd.read_excel(file_path)
 df['tanggal'] = pd.to_datetime(df['tanggal'])
@@ -64,3 +64,4 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
+
