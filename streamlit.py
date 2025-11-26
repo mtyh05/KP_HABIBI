@@ -67,11 +67,20 @@ if st.button('Prediksi'):
 
     # Plot hasil prediksi
     plt.figure(figsize=(10, 6))
-    plt.plot(predicted_df['Tanggal'], predicted_df['Prediksi Stok Terpakai'], label='Prediksi Stok Terpakai', color='orange')
+    
+    # Plot data aktual
+    plt.plot(data['tanggal'], data['stok_terpakai'], label='Actual Demand', color='blue', marker='o')
+
+    # Plot prediksi
+    plt.plot(predicted_df['Tanggal'], predicted_df['Prediksi Stok Terpakai'], label='Prediksi Stok Terpakai', color='orange', marker='x')
+
+    # Menambahkan label dan judul
     plt.xlabel('Tanggal')
     plt.ylabel('Stok Terpakai')
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
+
+    # Menambahkan legend
     plt.legend()
+
+    # Tampilkan grafik di Streamlit
     st.pyplot()
-
-
