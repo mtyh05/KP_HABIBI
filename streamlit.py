@@ -87,17 +87,3 @@ if st.button('Prediksi'):
 
     # Tampilkan grafik di Streamlit
     st.pyplot()
-
-    # Mengupdate tanggal dengan prediksi dan menambahkan data baru
-    updated_dates = pd.date_range(start=data['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
-    new_data = pd.DataFrame({
-        'tanggal': updated_dates,
-        'stok_terpakai': predictions_rescaled.flatten()
-    })
-
-    # Gabungkan data lama dan prediksi
-    updated_data = pd.concat([data, new_data])
-
-    # Tampilkan data terbaru yang sudah diperbarui
-    st.subheader('Data Terbaru Setelah Pembaruan Prediksi:')
-    st.write(updated_data.tail(10))  # Menampilkan 10 data terbaru
