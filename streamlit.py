@@ -53,15 +53,15 @@ n_days = st.number_input('Masukkan jumlah hari untuk diprediksi', min_value=1, m
 
 # Tombol untuk memulai prediksi
 if st.button('Prediksi'):
-    # Mengambil 7 hari terakhir dari data yang ada
-    last_7_days = data[-7:]
+    # Mengambil 30 hari terakhir dari data yang ada
+    last_30_days = data[-30:]
 
-    # Prediksi stok untuk n_days setelah 7 hari terakhir
+    # Prediksi stok untuk n_days setelah 30 hari terakhir
     predictions_rescaled = predict_stok(n_days, model, data)
 
     # Tampilkan hasil prediksi
     st.subheader(f'Prediksi untuk {n_days} Hari Ke Depan:')
-    predicted_dates = pd.date_range(start=last_7_days['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
+    predicted_dates = pd.date_range(start=last_30_days['tanggal'].max() + pd.Timedelta(days=1), periods=n_days, freq='D')
     predicted_df = pd.DataFrame({
         'Tanggal': predicted_dates,
         'Prediksi Stok Terpakai': predictions_rescaled.flatten()
@@ -70,9 +70,9 @@ if st.button('Prediksi'):
 
     # Plot hasil prediksi
     plt.figure(figsize=(10, 6))
-
-    # Plot 7 hari terakhir (data aktual)
-    plt.plot(last_7_days['tanggal'], last_7_days['stok_terpakai'], label='Actual Demand (7 Hari Terakhir)', color='blue', marker='o')
+    
+    # Plot 30 hari terakhir (data aktual)
+    plt.plot(last_30_days['tanggal'], last_30_days['stok_terpakai'], label='Actual Demand (30 Hari Terakhir)', color='blue', marker='o')
 
     # Plot prediksi untuk periode berikutnya
     plt.plot(predicted_df['Tanggal'], predicted_df['Prediksi Stok Terpakai'], label='Prediksi Stok Terpakai', color='orange', marker='x')
