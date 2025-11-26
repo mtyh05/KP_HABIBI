@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # Muat model yang sudah dilatih dengan penanganan error
 try:
     model = load_model('stok_terpakai_model.h5')  # Pastikan model yang sudah dilatih berada di path yang benar
-    st.success("Model berhasil dimuat!")
+    st.success
 except Exception as e:
     st.error(f"Model tidak dapat dimuat: {e}")
     st.stop()  # Menghentikan eksekusi jika model gagal dimuat
@@ -73,3 +73,4 @@ if st.button('Prediksi'):
     plt.title(f'Prediksi Stok Terpakai untuk {n_days} Hari Ke Depan')
     plt.legend()
     st.pyplot()
+
