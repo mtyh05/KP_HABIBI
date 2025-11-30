@@ -31,6 +31,9 @@ def predict_stok(n_days, model, data, seq_length=7):
 
     # Transformasi kembali prediksi ke skala asli
     predictions_rescaled = scaler.inverse_transform(np.array(predictions).reshape(-1, 1))
+
+    # Membulatkan prediksi ke angka bulat
+    predictions_rescaled = np.round(predictions_rescaled).astype(int)  # Membulatkan ke integer
     return predictions_rescaled
 
 # Antarmuka pengguna dengan Streamlit
