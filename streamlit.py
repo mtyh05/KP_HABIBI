@@ -38,7 +38,7 @@ def predict_stok(n_days, model, data, seq_length=7):
 
 # Antarmuka pengguna dengan Streamlit
 st.title('Peramalan Stok Terpakai')
-st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok dalam periode tertentu berdasarkan data yang sudah ada.')
+st.write('Aplikasi ini digunakan untuk memprediksi penggunaan stok Mie Ayam dalam periode tertentu berdasarkan data yang sudah ada.')
 
 # Membaca file CSV
 try:
@@ -87,3 +87,4 @@ if st.button('Prediksi'):
 
     # Tampilkan grafik di Streamlit
     st.pyplot()
+
